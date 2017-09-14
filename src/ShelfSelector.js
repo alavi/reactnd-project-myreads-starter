@@ -1,17 +1,29 @@
 import React, { Component } from 'react'
-class ShelfSelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {value: 'currentlyReading'};
+import * as BooksAPI from './BooksAPI'
+import PropTypes from 'prop-types'
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+class ShelfSelector extends React.Component {
+
+
+  static propTypes = {
+    book: PropTypes.object.isRequired
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  state = {
+    shelf: ''
+
+  }
+
+  onChangeShelf(event) {
+    this.setState({shelf: event.target.value});
   //  alert('Your selected shelf  is: ' + this.state.value);
     alert('Your selected shelf  is: ' + event.target.value);
+  //  this.setState({ shelf: BooksAPI.update(book, event.target.value)})
+  }
+
+  updateShelf = (book) => {
+    this.setState((state) => (BooksAPI.update(book, this.state.shelf)
+    ))
   }
 
   handleSubmit(event) {
@@ -20,10 +32,11 @@ class ShelfSelector extends React.Component {
   }
 
   render() {
+    const { book, onChangeShelf } = this.props
     return (
     // <form onSubmit={this.handleSubmit}>
       <div className="book-shelf-changer">
-          <select value={this.state.value} onChange={this.handleChange}>
+          <select key={book.name} value={book.shelf} onChange={(event) => this.onChageShelf(event.target.value)}>
             <option value="none" disabled>Move to...</option>
             <option value="currentlyReading">Currently Reading</option>
             <option value="wantToRead">Want to Read</option>

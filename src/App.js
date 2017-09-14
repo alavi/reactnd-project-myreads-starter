@@ -3,8 +3,10 @@ import * as BooksAPI from './BooksAPI'
 import { Route } from 'react-router-dom'
 import ListBooks from './ListBooks'
 import './App.css'
+import PropTypes from 'prop-types'
 
 class BooksApp extends React.Component {
+
   state = {
     /**
      * TODO: Instead of using this state variable to keep track of which page
@@ -18,10 +20,40 @@ class BooksApp extends React.Component {
 
 
   componentDidMount () {
+
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
+    console.log(this.state.books)
   }
+  changeShelf(book, shelf){
+  //  alert ('changeShelf has been called ' + book.title + 'shelf: ' + shelf )
+
+    this.setState({books: BooksAPI.update(book, shelf)})
+
+
+  }
+
+  updateShelf = (book, shelf) => {
+
+  //  BooksAPI.update(book, shelf)
+  //  this.setState((state) => ({
+    //books: state.books}))
+    console.log('here: BooksAPI.update: ' + book.title + ' moved to Shelf: ' + shelf)
+    console.log(BooksAPI.update(book, shelf))
+
+  //  BooksAPI.update(book, shelf).then((books) => {
+    //  this.setState({ books })
+    BooksAPI.update(book, shelf)
+    BooksAPI.getAll().then((books) => {
+        this.setState({ books })
+
+    })
+
+  }
+
+
+
 
   render() {
     return (
@@ -51,6 +83,7 @@ class BooksApp extends React.Component {
 //console.log(this.state.books)
         //  <Route exact path='/' render={() => (
            <ListBooks
+              onChangeShelf={this.updateShelf}
               books={this.state.books}
            />
         // )}/>
