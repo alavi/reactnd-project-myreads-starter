@@ -16,23 +16,25 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false,
     query: '',
+    myReads: [],
     books: []
   }
 
 
   componentDidMount () {
 
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
+    BooksAPI.getAll().then((myReads) => {
+      this.setState({ myReads })
+
     })
-    console.log(this.state.books)
+    this.setState({book: []})
+    console.log(this.state.myReads)
   }
+
   changeShelf(book, shelf){
   //  alert ('changeShelf has been called ' + book.title + 'shelf: ' + shelf )
 
-    this.setState({books: BooksAPI.update(book, shelf)})
-
-
+    this.setState({myReads: BooksAPI.update(book, shelf)})
   }
 
   updateShelf = (book, shelf) => {
@@ -46,8 +48,8 @@ class BooksApp extends React.Component {
   //  BooksAPI.update(book, shelf).then((books) => {
     //  this.setState({ books })
     BooksAPI.update(book, shelf)
-    BooksAPI.getAll().then((books) => {
-        this.setState({ books })
+    BooksAPI.getAll().then((myReads) => {
+        this.setState({ myReads })
 
     })
 
@@ -55,9 +57,12 @@ class BooksApp extends React.Component {
   updateQuery = (query) => {
      this.setState({ query: query.trim() })
      console.log('in updateQuery function! query = ' + query)
-     query.length !=0 && BooksAPI.search(query,20).then((books) => {
+     query.length !==0 && BooksAPI.search(query,20).then((books) => {
          this.setState({ books })
-     })
+   })
+
+         console.log('in updateQuery function! books = ' + this.state.books)
+
    }
 
   searchBooks = (query) => {
@@ -78,7 +83,6 @@ if (query) {
   render() {
     //const { query } = this.state.query
 
-
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -94,6 +98,7 @@ if (query) {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
+                {JSON.stringify(this.state.query)}
                 <input type="text" placeholder="Search by title or author"
                   value={this.state.query}
                   onChange={(event) =>  this.updateQuery(event.target.value)}
@@ -146,12 +151,13 @@ if (query) {
 
            <ListBooks
               onChangeShelf={this.updateShelf}
-              books={this.state.books}
+              myReads={this.state.myReads}
+
            />
 
            <div className="open-search">
 
-              <a onClick={() =>  this.setState({ showSearchPage: true })}>Add a book</a>
+              <a onClick={() => {this.clearQuery(); this.setState({books: []}); this.setState({ showSearchPage: true })}}>Add a book</a>
 
           </div>
 

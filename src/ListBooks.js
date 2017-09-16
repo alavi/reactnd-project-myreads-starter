@@ -7,14 +7,16 @@ import sortBy from 'sort-by'
 
 class  ListBooks extends Component {
   static propTypes = {
-    books: PropTypes.array.isRequired,
-    onChangeShelf: PropTypes.func.isRequired
+    myReads: PropTypes.array.isRequired,
+    onChangeShelf: PropTypes.func.isRequired,
+    
+
   }
 
-  state = {
-    query: '',
-    shelf:'None'
-  }
+//  state = {
+//    query: '',
+//    shelf:'None'
+//  }
 
   updateQuery = (query) => {
     this.setState({query: query.trim()})
@@ -30,11 +32,13 @@ class  ListBooks extends Component {
 
 render(){
   console.log(this.props)
-    const { books, onChangeShelf } = this.props
+    const { myReads, onChangeShelf } = this.props
   //  console.log(books)
-    const { query } = this.state
+    //const { query } = this.state
 
     let showingBooks
+    showingBooks = myReads
+{/*
     if (query){
       const match = new RegExp(escapeRegExp(query), 'i')
       showingBooks = books.filter((book) => match.test(book.title))
@@ -42,6 +46,8 @@ render(){
     } else {
       showingBooks = books
     }
+
+  */}
     //showingBooks.sort(sortBy('title'))
 //showingBooks = books
 console.log(showingBooks)
