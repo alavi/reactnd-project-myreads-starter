@@ -9,51 +9,25 @@ class  ListBooks extends Component {
   static propTypes = {
     myReads: PropTypes.array.isRequired,
     onChangeShelf: PropTypes.func.isRequired,
-    
+    onNavigate: PropTypes.func.isRequired
 
   }
-
-//  state = {
-//    query: '',
-//    shelf:'None'
-//  }
-
-  updateQuery = (query) => {
-    this.setState({query: query.trim()})
-  }
-  clearQuery = (query) => {
-    this.setState({query:  ''})
-  }
-
-  changeShelf = (shelf) => {
-    this.setState({shelf: shelf.trim()})
-  }
-
 
 render(){
   console.log(this.props)
-    const { myReads, onChangeShelf } = this.props
+    const { myReads, onChangeShelf, onNavigate } = this.props
   //  console.log(books)
     //const { query } = this.state
 
     let showingBooks
     showingBooks = myReads
-{/*
-    if (query){
-      const match = new RegExp(escapeRegExp(query), 'i')
-      showingBooks = books.filter((book) => match.test(book.title))
 
-    } else {
-      showingBooks = books
-    }
-
-  */}
-    //showingBooks.sort(sortBy('title'))
-//showingBooks = books
+//  showingBooks.sort(sortBy('title'))
+//  showingBooks = books
 console.log(showingBooks)
-let currentlyReading = showingBooks.filter((book) => (book.shelf == 'currentlyReading'))
-let wantToRead = showingBooks.filter((book) => (book.shelf == 'wantToRead'))
-let read = showingBooks.filter((book) => (book.shelf == 'read'))
+let currentlyReading = showingBooks.filter((book) => (book.shelf === 'currentlyReading'))
+let wantToRead = showingBooks.filter((book) => (book.shelf === 'wantToRead'))
+let read = showingBooks.filter((book) => (book.shelf === 'read'))
 console.log(currentlyReading)
    return (
 
@@ -75,7 +49,7 @@ console.log(currentlyReading)
 
 
                        <div className="book-shelf-changer">
-                           <select key={book.name} value={book.shelf} onChange={(event) => this.props.onChangeShelf(book, event.target.value)}>
+                           <select key={book.name} value={book.shelf} onChange={(event) => onChangeShelf(book, event.target.value)}>
                              <option value="none" disabled>Move to...</option>
                              <option value="currentlyReading">Currently Reading</option>
                              <option value="wantToRead">Want to Read</option>
@@ -184,6 +158,9 @@ console.log(currentlyReading)
             </div>
           </div>
 
+          <div className="open-search">
+            <a onClick={onNavigate}>Add a book</a>
+          </div>
       </div>
    )
  }

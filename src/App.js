@@ -2,8 +2,8 @@ import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import { Route } from 'react-router-dom'
 import ListBooks from './ListBooks'
+import SearchPage from './SearchPage'
 import './App.css'
-import PropTypes from 'prop-types'
 
 class BooksApp extends React.Component {
 
@@ -16,8 +16,8 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false,
     query: '',
-    myReads: [],
-    books: []
+    myReads: []
+
   }
 
 
@@ -27,15 +27,10 @@ class BooksApp extends React.Component {
       this.setState({ myReads })
 
     })
-    this.setState({book: []})
-    console.log(this.state.myReads)
+
   }
 
-  changeShelf(book, shelf){
-  //  alert ('changeShelf has been called ' + book.title + 'shelf: ' + shelf )
 
-    this.setState({myReads: BooksAPI.update(book, shelf)})
-  }
 
   updateShelf = (book, shelf) => {
 
@@ -54,16 +49,7 @@ class BooksApp extends React.Component {
     })
 
   }
-  updateQuery = (query) => {
-     this.setState({ query: query.trim() })
-     console.log('in updateQuery function! query = ' + query)
-     query.length !==0 && BooksAPI.search(query,20).then((books) => {
-         this.setState({ books })
-   })
 
-         console.log('in updateQuery function! books = ' + this.state.books)
-
-   }
 
   searchBooks = (query) => {
     console.log('in searchBooks function! query = ' + query)
@@ -85,90 +71,19 @@ if (query) {
 
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
+        {this.state.showSearchPage && (
+          <SearchPage onChangeShelf={this.updateShelf}
+            onNavigate={()=> this.setState({showSearchPage:false})}/>
+        )}
 
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                {JSON.stringify(this.state.query)}
-                <input type="text" placeholder="Search by title or author"
-                  value={this.state.query}
-                  onChange={(event) =>  this.updateQuery(event.target.value)}
-                  />
-
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid">
-                {this.state.books && this.state.books.map(book => (
-                <li key={book.id}>
-                  <div className="book">
-                    <div className="book-top">
-                      <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-
-
-                      <div className="book-shelf-changer">
-                          <select key={book.name} value={book.shelf} onChange={(event) => this.updateShelf(book, event.target.value)}>
-                            <option value="none" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                          </select>
-                      </div>
-
-                    </div>
-                    <div className="book-title">{book.title}</div>
-                   {/*<div className="book-authors">{book.authors}</div>
-                   */}
-                    <div className="book-authors">
-                      {book.authors.map(author => (
-                        <p key={author}> {author} </p>))
-                      }
-                    </div>
-                  </div>
-                </li>
-              ))
-            }
-              </ol>
-            </div>
-
-
-          </div>
-        ) : (
-
-        //  <Route exact path='/' render={() => (
-
-        <div className="search-books-results">
-
-           <ListBooks
-              onChangeShelf={this.updateShelf}
+        {!this.state.showSearchPage && (
+           <ListBooks onChangeShelf={this.updateShelf}
               myReads={this.state.myReads}
+              onNavigate={() => {this.setState({showSearchPage: true})}}
 
            />
 
-           <div className="open-search">
-
-              <a onClick={() => {this.clearQuery(); this.setState({books: []}); this.setState({ showSearchPage: true })}}>Add a book</a>
-
-          </div>
-
-        </div>
-
-        )
-
-
-    }
-
-
+        )}
 
     </div>
 
