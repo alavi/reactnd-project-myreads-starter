@@ -1,23 +1,19 @@
 import React, { Component } from 'react'
-import escapeRegExp from 'escape-string-regexp'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import sortBy from 'sort-by'
+
 //import ShelfSelector from './ShelfSelector.js'
 
 class  ListBooks extends Component {
   static propTypes = {
     myReads: PropTypes.array.isRequired,
-    onChangeShelf: PropTypes.func.isRequired,
-    onNavigate: PropTypes.func.isRequired
+    onChangeShelf: PropTypes.func.isRequired
 
   }
 
 render(){
   console.log(this.props)
-    const { myReads, onChangeShelf, onNavigate } = this.props
-  //  console.log(books)
-    //const { query } = this.state
+    const { myReads, onChangeShelf } = this.props
 
     let showingBooks
     showingBooks = myReads
@@ -159,7 +155,7 @@ console.log(currentlyReading)
           </div>
 
           <div className="open-search">
-            <a onClick={onNavigate}>Add a book</a>
+            <Link to="/search" >Add a book</Link>
           </div>
       </div>
    )

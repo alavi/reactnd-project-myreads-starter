@@ -15,7 +15,6 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     showSearchPage: false,
-    query: '',
     myReads: []
 
   }
@@ -50,42 +49,24 @@ class BooksApp extends React.Component {
 
   }
 
-
-  searchBooks = (query) => {
-    console.log('in searchBooks function! query = ' + query)
-if (query) {
-    BooksAPI.search(query,20).then((books) => {
-        this.setState({ books })
-    })
-  }
-}
-
-  clearQuery = () => {
-      this.setState({ query: '' })
-    }
-
-
-
   render() {
     //const { query } = this.state.query
 
     return (
       <div className="app">
-        {this.state.showSearchPage && (
+        <Route exact path="/search"  render={() => (
           <SearchPage onChangeShelf={this.updateShelf}
-            onNavigate={()=> this.setState({showSearchPage:false})}/>
-        )}
+            books={this.state.books} />
+          )}
+          />
 
-        {!this.state.showSearchPage && (
+         <Route exact path="/list"  render={() =>(
            <ListBooks onChangeShelf={this.updateShelf}
               myReads={this.state.myReads}
-              onNavigate={() => {this.setState({showSearchPage: true})}}
-
+              />)}
            />
 
-        )}
-
-    </div>
+      </div>
 
     )
   }

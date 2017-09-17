@@ -4,13 +4,11 @@ import * as BooksAPI from './BooksAPI'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import sortBy from 'sort-by'
-//import ShelfSelector from './ShelfSelector.js'
 
 class SearchPage extends Component {
 
   static propTypes = {
 
-    onNavigate: PropTypes.func.isRequired,
     onChangeShelf: PropTypes.func.isRequired
 
   }
@@ -20,24 +18,21 @@ class SearchPage extends Component {
     books: []
  }
 
-
-
   updateQuery = (query) => {
     this.setState({query: query.trim()})
     console.log("inside update Query, query: " + query)
   }
+
   clearQuery = (query) => {
     this.setState({query: ''})
   }
-
-
 
 render(){
 
   if (this.state.query !== ''){
     console.log ("query not empty! query= " + this.state.query)
     BooksAPI.search(this.state.query,20).then((books) => {
-      this.setState({ books })})
+    this.setState({ books })})
     } else {
      console.log("empty query")
   }
@@ -45,7 +40,7 @@ render(){
   return (
      <div className="search-books">
          <div className="search-books-bar">
-           <a className="close-search" onClick={this.props.onNavigate}>Close</a>
+           <Link className="close-search" to="/list">Close</Link>
            <div className="search-books-input-wrapper">
 
              {JSON.stringify(this.state.query)}
