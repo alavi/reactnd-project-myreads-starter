@@ -5,7 +5,13 @@ import { Link } from 'react-router-dom'
 class  ListBooks extends Component {
   static propTypes = {
     myReads: PropTypes.array.isRequired,
-    onChangeShelf: PropTypes.func.isRequired
+    onChangeShelf: PropTypes.func.isRequired,
+    clearQuery: PropTypes.func.isRequired
+  }
+
+  componentDidMount () {
+
+      this.clearQuery
 
   }
 
@@ -48,7 +54,7 @@ listBooks = (books, shelfName, onChangeShelf)   => {
 
 render(){
 
-  const { myReads, onChangeShelf } = this.props
+  const { myReads, onChangeShelf, clearQuery } = this.props
 
   let currentlyReading = myReads.filter((book) => (book.shelf === 'currentlyReading'))
   let wantToRead = myReads.filter((book) => (book.shelf === 'wantToRead'))

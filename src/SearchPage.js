@@ -7,39 +7,20 @@ import { Link } from 'react-router-dom'
 class SearchPage extends Component {
 
   static propTypes = {
-    myReads: PropTypes.array.isRequired,
-    onChangeShelf: PropTypes.func.isRequired
+    books: PropTypes.array.isRequired,
+    onChangeShelf: PropTypes.func.isRequired,
+    query: PropTypes.string.isRequired,
+    updateQuery: PropTypes.func.isRequired,
+    clearQuery: PropTypes.func.isRequired
   }
 
-  state = {
-    query: '',
-    books: []
- }
-
-  updateQuery = (query) => {
-    if (query !== ''){
-      this.setState({query: query})
-      BooksAPI.search(query, 10).then(searchResults => {
-          let results = (!searchResults || searchResults.error) ? [] : searchResults
-          this.setState({
-            books: results
-          })
-        })
-
-      } else {
-        this.setState({
-          query: '',
-          books: []})
-      }
-  }
-
-  clearQuery = (query) => {
-    this.setState({query: ''})
-  }
+  componentWillMount () {
+      this.props.clearQuery()
+    }
 
 render(){
 
-  const { myReads, onChangeShelf } = this.props
+  const { books, onChangeShelf, query, updateQuery, clearQuery } = this.props
 
   return (
      <div className="search-books">
@@ -49,17 +30,17 @@ render(){
 
             {/*JSON.stringify(this.state.query) */}
              <input type="text" placeholder="Search by title or author"
-               value={this.state.query}
-               onChange={(event) =>  this.updateQuery(event.target.value)}
+               value={query}
+               onChange={(event) =>  updateQuery(event.target.value)}
                />
            </div>
          </div>
 
 
-      if ({this.state.books !== []}) {
+      if ({books !== []}) {
          <div className="search-books-results">
             <ol className="books-grid">
-             {this.state.books.map(book => (
+             {books.map(book => (
                <li key={book.id}>
                  <div className="book">
                    <div className="book-top">

@@ -9,6 +9,8 @@ class BooksApp extends React.Component {
 
   state = {
     myReads: [],
+    books: [],
+    query: ''
   }
 
   componentDidMount () {
@@ -24,19 +26,46 @@ class BooksApp extends React.Component {
     })
   }
 
+  updateQuery = (query) => {
+    if (query !== ''){
+      this.setState({query: query})
+      BooksAPI.search(query, 10).then(searchResults => {
+          let results = (!searchResults || searchResults.error) ? [] : searchResults
+          this.setState({
+            books: results
+          })
+        })
+      } else {
+        this.setState({
+          query: '',
+          books: []})
+      }
+  }
+
+  clearQuery = (query) => {
+    this.setState({query: ''})
+  }
+
   render() {
 
     return (
       <div className="app">
         <Route exact path="/search"  render={() => (
-          <SearchPage onChangeShelf={this.updateShelf}
-            myReads={this.state.myReads} />
+          <SearchPage
+            books={this.state.books}
+            onChangeShelf={this.updateShelf}
+            query={this.state.query}
+            updateQuery={this.updateQuery}
+            clearQuery={this.clearQuery}
+            />
           )}
           />
 
          <Route exact path="/"  render={() =>(
            <ListBooks onChangeShelf={this.updateShelf}
               myReads={this.state.myReads}
+              clearQuery={this.clearQuery}
+
               />)}
            />
 
