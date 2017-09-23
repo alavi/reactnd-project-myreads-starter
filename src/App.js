@@ -8,50 +8,29 @@ import './App.css'
 class BooksApp extends React.Component {
 
   state = {
-    
     myReads: [],
-
   }
-
 
   componentDidMount () {
-
     BooksAPI.getAll().then((myReads) => {
       this.setState({ myReads })
-
     })
-
   }
 
-
-
   updateShelf = (book, shelf) => {
-
-  //  BooksAPI.update(book, shelf)
-  //  this.setState((state) => ({
-    //books: state.books}))
-    console.log('here: BooksAPI.update: ' + book.title + ' moved to Shelf: ' + shelf)
-    console.log(BooksAPI.update(book, shelf))
-
-  //  BooksAPI.update(book, shelf).then((books) => {
-    //  this.setState({ books })
     BooksAPI.update(book, shelf)
     BooksAPI.getAll().then((myReads) => {
         this.setState({ myReads })
-
     })
-
   }
 
-
   render() {
-    //const { query } = this.state.query
 
     return (
       <div className="app">
         <Route exact path="/search"  render={() => (
           <SearchPage onChangeShelf={this.updateShelf}
-            books={this.state.books} />
+            myReads={this.state.myReads} />
           )}
           />
 

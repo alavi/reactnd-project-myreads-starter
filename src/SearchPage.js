@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
-import escapeRegExp from 'escape-string-regexp'
 import * as BooksAPI from './BooksAPI'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import sortBy from 'sort-by'
+
 
 class SearchPage extends Component {
 
   static propTypes = {
-
+    myReads: PropTypes.array.isRequired,
     onChangeShelf: PropTypes.func.isRequired
-
   }
 
   state = {
@@ -19,15 +17,11 @@ class SearchPage extends Component {
  }
 
   updateQuery = (query) => {
-
-    console.log("inside update Query, query: " + query)
-
     if (query !== ''){
-
+      this.setState({query: query})
       BooksAPI.search(query, 10).then(searchResults => {
           let results = (!searchResults || searchResults.error) ? [] : searchResults
           this.setState({
-            query: query,
             books: results
           })
         })
@@ -35,12 +29,8 @@ class SearchPage extends Component {
       } else {
         this.setState({
           query: '',
-          books: []
-        })
+          books: []})
       }
-      console.log()
-      console.log(this.state.books.length)
-      console.log("inside update Query, this.query: " + this.query)
   }
 
   clearQuery = (query) => {
@@ -49,7 +39,7 @@ class SearchPage extends Component {
 
 render(){
 
-  const { onChangeShelf } = this.props
+  const { myReads, onChangeShelf } = this.props
 
   return (
      <div className="search-books">
@@ -57,7 +47,7 @@ render(){
            <Link className="close-search" to="/">Close</Link>
            <div className="search-books-input-wrapper">
 
-             {JSON.stringify(this.state.query)}
+            {/*JSON.stringify(this.state.query) */}
              <input type="text" placeholder="Search by title or author"
                value={this.state.query}
                onChange={(event) =>  this.updateQuery(event.target.value)}
@@ -79,7 +69,7 @@ render(){
                       </div>
 
                      <div className="book-shelf-changer">
-                         <select key={book.name} value={book.shelf} onChange={(event) => this.props.onChangeShelf(book, event.target.value)}>
+                         <select key={book.name} value="{book.shelf}" onChange={(event) => onChangeShelf(book, event.target.value)}>
                            <option value="none" disabled>Move to...</option>
                            <option value="currentlyReading">Currently Reading</option>
                            <option value="wantToRead">Want to Read</option>
