@@ -19,8 +19,28 @@ class SearchPage extends Component {
  }
 
   updateQuery = (query) => {
-    this.setState({query: query.trim()})
+
     console.log("inside update Query, query: " + query)
+
+    if (query !== ''){
+
+      BooksAPI.search(query, 10).then(searchResults => {
+          let results = (!searchResults || searchResults.error) ? [] : searchResults
+          this.setState({
+            query: query,
+            books: results
+          })
+        })
+
+      } else {
+        this.setState({
+          query: '',
+          books: []
+        })
+      }
+      console.log()
+      console.log(this.state.books.length)
+      console.log("inside update Query, this.query: " + this.query)
   }
 
   clearQuery = (query) => {
@@ -29,18 +49,12 @@ class SearchPage extends Component {
 
 render(){
 
-  if (this.state.query !== ''){
-    console.log ("query not empty! query= " + this.state.query)
-    BooksAPI.search(this.state.query,20).then((books) => {
-    this.setState({ books })})
-    } else {
-     console.log("empty query")
-  }
+  const { onChangeShelf } = this.props
 
   return (
      <div className="search-books">
          <div className="search-books-bar">
-           <Link className="close-search" to="/list">Close</Link>
+           <Link className="close-search" to="/">Close</Link>
            <div className="search-books-input-wrapper">
 
              {JSON.stringify(this.state.query)}
@@ -51,6 +65,8 @@ render(){
            </div>
          </div>
 
+
+      if ({this.state.books !== []}) {
          <div className="search-books-results">
             <ol className="books-grid">
              {this.state.books.map(book => (
@@ -77,7 +93,7 @@ render(){
 
                    <div className="book-authors">
                      {book.authors.map(author => (
-                       <p key={author}> {author} </p>))
+                       <p key={author}>{author}</p>))
                      }
                    </div>
                  </div>
@@ -85,6 +101,7 @@ render(){
            ))}
            </ol>
        </div>
+     }
       </div>
  )
 }

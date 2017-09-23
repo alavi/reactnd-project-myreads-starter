@@ -8,14 +8,8 @@ import './App.css'
 class BooksApp extends React.Component {
 
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
-    myReads: []
+    
+    myReads: [],
 
   }
 
@@ -49,6 +43,7 @@ class BooksApp extends React.Component {
 
   }
 
+
   render() {
     //const { query } = this.state.query
 
@@ -60,7 +55,7 @@ class BooksApp extends React.Component {
           )}
           />
 
-         <Route exact path="/list"  render={() =>(
+         <Route exact path="/"  render={() =>(
            <ListBooks onChangeShelf={this.updateShelf}
               myReads={this.state.myReads}
               />)}
