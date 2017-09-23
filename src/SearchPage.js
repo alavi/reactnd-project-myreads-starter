@@ -3,24 +3,36 @@ import * as BooksAPI from './BooksAPI'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-
 class SearchPage extends Component {
 
   static propTypes = {
-    books: PropTypes.array.isRequired,
     onChangeShelf: PropTypes.func.isRequired,
-    query: PropTypes.string.isRequired,
-    updateQuery: PropTypes.func.isRequired,
-    clearQuery: PropTypes.func.isRequired
   }
 
-  componentWillMount () {
-      this.props.clearQuery()
-    }
+  state = {
+    books: [],
+    query: ''
+  }
+
+  updateQuery = (query) => {
+    if (query !== ''){
+      this.setState({query: query})
+      BooksAPI.search(query, 10).then(searchResults => {
+          let results = (!searchResults || searchResults.error) ? [] : searchResults
+          this.setState({
+            books: results
+          })
+        })
+      } else {
+        this.setState({
+          query: '',
+          books: []})
+      }
+  }
 
 render(){
 
-  const { books, onChangeShelf, query, updateQuery, clearQuery } = this.props
+  const {  onChangeShelf } = this.props
 
   return (
      <div className="search-books">
@@ -30,17 +42,17 @@ render(){
 
             {/*JSON.stringify(this.state.query) */}
              <input type="text" placeholder="Search by title or author"
-               value={query}
-               onChange={(event) =>  updateQuery(event.target.value)}
+               value={this.query}
+               onChange={(event) =>  this.updateQuery(event.target.value)}
                />
            </div>
          </div>
 
 
-      if ({books !== []}) {
+      if ({this.state.books !== []}) {
          <div className="search-books-results">
             <ol className="books-grid">
-             {books.map(book => (
+             {this.state.books.map(book => (
                <li key={book.id}>
                  <div className="book">
                    <div className="book-top">
@@ -50,7 +62,7 @@ render(){
                       </div>
 
                      <div className="book-shelf-changer">
-                         <select key={book.name} value="{book.shelf}" onChange={(event) => onChangeShelf(book, event.target.value)}>
+                         <select key={book.name} value={book.shelf} onChange={(event) => onChangeShelf(book, event.target.value)}>
                            <option value="none" disabled>Move to...</option>
                            <option value="currentlyReading">Currently Reading</option>
                            <option value="wantToRead">Want to Read</option>
