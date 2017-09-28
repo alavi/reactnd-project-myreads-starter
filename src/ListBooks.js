@@ -8,7 +8,6 @@ class  ListBooks extends Component {
     onChangeShelf: PropTypes.func.isRequired
   }
 
-
 listBooks = (books, shelfName, onChangeShelf)   => {
   return (
         <div className="bookshelf">
@@ -21,7 +20,7 @@ listBooks = (books, shelfName, onChangeShelf)   => {
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
                     <div className="book-shelf-changer">
-                        <select key={book.name} value={book.shelf} onChange={(event) => onChangeShelf(book, event.target.value)}>
+                        <select key={book.id} value={book.shelf} onChange={(event) => onChangeShelf(book, event.target.value)}>
                           <option value="none" disabled>Move to...</option>
                           <option value="currentlyReading">Currently Reading</option>
                           <option value="wantToRead">Want to Read</option>
@@ -49,6 +48,13 @@ listBooks = (books, shelfName, onChangeShelf)   => {
 render(){
 
   const { myReads, onChangeShelf} = this.props
+
+//  if (this.state.books !== []) {
+
+//    this.state.books.forEach((item) => {
+//       item.shelf =  myReads.find((book) => book.id === item.id) ?  myReads.find((book) => book.id === item.id).shelf : "none"
+//    })
+//  }
 
   let currentlyReading = myReads.filter((book) => (book.shelf === 'currentlyReading'))
   let wantToRead = myReads.filter((book) => (book.shelf === 'wantToRead'))
