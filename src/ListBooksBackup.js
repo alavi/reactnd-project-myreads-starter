@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 class  ListBooks extends Component {
-
   static propTypes = {
-    books: PropTypes.array.isRequired,
-    shelfName: PropTypes.string.isRequired,
+    myReads: PropTypes.array.isRequired,
     onChangeShelf: PropTypes.func.isRequired
   }
 
-render(){
-
-  const { books, shelfName, onChangeShelf } = this.props
-
+listBooks = (books, shelfName, onChangeShelf)   => {
   return (
         <div className="bookshelf">
           <h2 className="bookshelf-title">{shelfName}</h2>
@@ -41,10 +37,46 @@ render(){
                   </div>
                 </div>
               </li>
-              ))}
+            ))
+          }
            </ol>
           </div>
          </div>
-       )}}
+  )
+}
+
+render(){
+
+  const { myReads, onChangeShelf} = this.props
+
+//  if (this.state.books !== []) {
+
+//    this.state.books.forEach((item) => {
+//       item.shelf =  myReads.find((book) => book.id === item.id) ?  myReads.find((book) => book.id === item.id).shelf : "none"
+//    })
+//  }
+
+  let currentlyReading = myReads.filter((book) => (book.shelf === 'currentlyReading'))
+  let wantToRead = myReads.filter((book) => (book.shelf === 'wantToRead'))
+  let read = myReads.filter((book) => (book.shelf === 'read'))
+
+   return (
+
+     <div className="list-books">
+       <div className="list-books-title">
+         <h1>MyReads</h1>
+       </div>
+         <div className="list-books-content">
+             {this.listBooks(currentlyReading, "Currently Reading", onChangeShelf)}
+             {this.listBooks(wantToRead, "Want To Read", onChangeShelf)}
+             {this.listBooks(read, "Read", onChangeShelf)}
+             <div className="open-search">
+                <Link to="/search" >Add a book</Link>
+             </div>
+          </div>
+      </div>
+   )
+ }
+}
 
 export default ListBooks
